@@ -1,0 +1,13 @@
+<form name="addImageForm">
+  <img data-ng-src="{{image}}" alt="Preview" data-ng-show="image" />
+  <label>Icon Size</label>
+  <span data-ng-repeat="size in sizes">
+    <input type="radio" name="imageSize" value="{{size}}" required data-ng-model="scope.imageSize" /> 
+    {{size}}x{{size}}
+  </span>
+
+  <input type="file" data-ng-file-select="onFileSelect($files)" required name="iconImage" data-ng-disabled="!scope.imageSize"/>
+</form>
+
+<button class="button" data-ng-click="ok()" data-ng-disabled="!(scope.imageSize && image)">OK</button>
+<a class="close-reveal-modal" data-ng-click="cancel()">&#215;</a>
