@@ -18,47 +18,64 @@
     <div class="row">
       <div class="large-3 medium-3 columns">
         <ul class="no-bullet">
-          <li><span class="success label"><i class="fa fa-check-circle"></i> Has Link</span></li>
-          <li><span class="alert label"><i class="fa fa-times-circle"></i> Has Description</span></li>
-          <li><span class="alert label"><i class="fa fa-times-circle"></i> Has Icon</span></li>
+          <li data-ng-repeat="field in ['name','description','icon','url']">
+            <span data-ng-class="{'label': 1, 'alert': dataForm[field].$invalid, 'success': !dataForm[field].$invalid }">
+              <i data-ng-class="{'fa': 1, 'fa-times-circle': dataForm[field].$invalid, 'fa-check-circle': !dataForm[field].$invalid}"></i> Has {{field}}
+            </span>
+          </li>
         </ul>
-        <a href="#" class="medium round success button">Generate</a><br/>
+        <a href="#" class="medium round success button" data-ng-disabled="!dataForm.$valid">Generate</a><br/>
       </div>
 
       <div class="large-9 medium-9 columns">
-        <form>
+        <form name="dataForm">
           <fieldset>
-            <legend>Yo</legend>
+            <!-- legend>Yo</legend -->
 
             <div class="row">
               <div class="large-12 medium-12 columns">
-                <label>Name</label>
-                <input type="text" placeholder="URL" data-ng-model="data.name"/>
+                <label data-ng-class="{'error': dataForm.name.$dirty && dataForm.name.$invalid }">
+                  Name <span class="required">*</span>
+                  <input type="text" placeholder="App Name" data-ng-model="name" name="name" required />
+                </label>
+                <small class="error" data-ng-show="dataForm.name.$dirty && dataForm.name.$error.required">Required</small>
               </div>
             </div>
             <div class="row">
               <div class="large-12 medium-12 columns">
-                <label>Description</label>
-                <input type="text" placeholder="URL" data-ng-model="data.description" maxlength="132"/>
+                <label data-ng-class="{'error': dataForm.description.$dirty && dataForm.description.$invalid }">
+                  Description <span class="required">*</span>
+                  <input type="text" placeholder="URL" data-ng-model="description" maxlength="132" name="description" required/>
+                  <small class="error" data-ng-show="dataForm.description.$dirty && dataForm.description.$error.required">Required</small>
+                </label>
               </div>
             </div>
             <div class="row">
               <div class="large-12 medium-12 columns">
-                <label>Icons</label>
-                <div class="small-block-grid-2 large-block-grid-4">
-                  <div ng-repeat="(size,icon) in data.icons">
-                    {{size}}x{{size}}
-                    <br/>
-                    <img class="th" data-ng-src="{{icon}}">
-                  </div>
+                <label data-ng-class="{'error': dataForm.icon.$invalid && dataForm.icon.$dirty}">
+                  Icons <span class="required">*</span>
+                  <div class="small-block-grid-2 large-block-grid-4">
+                    <input type="number" style="display:none" name="icon" data-ng-model="iconLength" min="1" required />
+                    <div ng-repeat="(size,icon) in icons">
+                      {{size}}x{{size}}
+                      <br/>
+                      <img class="th" data-ng-src="{{icon}}">
+                    </div>
+                  </label>
+                  <a href="#" class="small button" data-ng-click="addImage()">Add Icon</a>
+                  <small class="error" data-ng-show="dataForm.icon.$dirty && dataForm.icon.$error.min">At least one icon is required</small>
                 </div>
-                <a href="#" class="small button" data-ng-click="addImage()">Add Icon</a>
               </div>
             </div>
             <div class="row">
               <div class="large-12 medium-12 columns">
-                <label>Link</label>
-                <input type="text" placeholder="URL" data-ng-model="url"/>
+                <label data-ng-class="{'error': dataForm.url.$dirty && dataForm.url.$invalid }">
+                  Link <span class="required">*</span>
+                  <input type="url" placeholder="URL" data-ng-model="url" name="url" required/>
+                </label>
+                <small class="error" data-ng-show="dataForm.url.$dirty && dataForm.url.$error.required">Required</small>
+                <small class="error" data-ng-show="dataForm.url.$dirty && dataForm.url.$error.url">Not a URL</small>
+
               </div>
             </div>
 

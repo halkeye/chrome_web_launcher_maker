@@ -9,7 +9,34 @@ var launcherMakerApp = angular.module('launcherMakerApp', [
 
 launcherMakerApp.controller('LauncherController', function ($scope, $modal) {
   'use strict';
-  $scope.rawIcons = [];
+
+  $scope.icons = {};
+  $scope.iconLength = 0;
+  $scope.name = '';
+  $scope.description = '';
+  $scope.url = '';
+  /*
+
+  var unregisterDataFormWatch = $scope.$watch('dataForm', function() {
+    unregisterDataFormWatch();
+    $scope.dataForm.icon.$setValidity('required', false);
+    console.log($scope.dataForm);
+  });
+  */
+
+  $scope.generate = function() {
+    $scope.data = {
+      'name': $scope.name,
+      'description': $scope.description,
+      'version': '1.0.0',
+      'manifest_version': 2,
+      'icons': $scope.icons,
+      'app': {
+        'urls': [ $scope.url ],
+        'launch': { 'web_url': $scope.url }
+      }
+    };
+  };
 
   $scope.addImage = function() {
     var modalInstance = $modal.open({
@@ -23,23 +50,11 @@ launcherMakerApp.controller('LauncherController', function ($scope, $modal) {
     });
 
     modalInstance.result.then(function (imageData) {
-      $scope.data.icons[imageData.size] = imageData.image;
-      console.log(imageData);
+      $scope.icons[imageData.size] = imageData.image;
+      $scope.iconLength = Object.keys($scope.icons).length;
     }, function () {
 //      $log.info('Modal dismissed at: ' + new Date());
     });
-  };
-
-  $scope.data = {
-    'name': 'App Name',
-    'description': 'App description (132 characters or less, no HTML)',
-    'version': '1.0.0',
-    'manifest_version': 2,
-    'icons': { },
-    'app': {
-      'urls': [ 'http://mysubdomain.example.com/' ],
-      'launch': { 'web_url': 'http://mysubdomain.example.com/' }
-    }
   };
 });
 
@@ -72,7 +87,6 @@ launcherMakerApp.controller('AddImageModalController', function ($scope, $modalI
           var canvas = document.createElement('canvas');
           canvas.width = $scope.scope.imageSize;
           canvas.height = $scope.scope.imageSize;
-          console.log(canvas.width);
           var ctx = canvas.getContext('2d');
           ctx.drawImage(img,0,0,$scope.scope.imageSize,$scope.scope.imageSize);
 
