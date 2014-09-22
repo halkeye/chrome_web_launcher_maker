@@ -36,6 +36,16 @@ launcherMakerApp.controller('LauncherController', function ($scope, $modal) {
         'launch': { 'web_url': $scope.url }
       }
     };
+    var zip = new JSZip();
+    angular.forEach($scope.icons, function(image, size) {
+      $scope.data.icons[size] = 'icon_' + size + '.png';
+      zip.file($scope.data.icons[size], image.replace('data:image/png;base64,', ''), {base64: true});
+    });
+    zip.file('manifest.json', JSON.stringify($scope.data));
+
+    var content = zip.generate({type:"blob"});
+    // see FileSaver.js
+    saveAs(content, "example.zip");
   };
 
   $scope.addImage = function() {
